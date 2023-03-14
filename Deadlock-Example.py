@@ -1,0 +1,40 @@
+import threading
+import time
+
+def thread_A():
+    print('Thread A is starting...')
+    print('Thread A waiting to acquire lock A.')
+    lock_A.acquire()
+    print('Thread A has acquired lock A, performing some calculation...')
+    time.sleep(2)
+    print('Thread A waiting to acquire lock B.')
+    lock_B.acquire()
+    print('Thread A has acquired lock B, performing some calculation...')
+    time.sleep(2)
+    print('Thread A releasing both locks.')
+    lock_A.release()
+    lock_B.release()
+
+def thread_B():
+    print('Thread B is starting...')
+    print('Thread B waiting to acquire lock B.')
+    lock_B.acquire()
+    print('Thread B has acquired lock B, performing some calculation...')
+    time.sleep(5)
+    print('Thread B waiting to acquire lock A.')
+    lock_A.acquire()
+    print('Thread B has acquired lock A, performing some calculation...')
+    time.sleep(5)
+    print('Thread B releasing both locks.')
+    lock_B.release()
+    lock_A.release()
+
+lock_A = threading.Lock()
+lock_B = threading.Lock()
+thread1 = threading.Thread(target=thread_A)
+thread2 = threading.Thread(target=thread_B)
+thread1.start()
+thread2.start()
+thread1.join()
+thread2.join()
+print('Finished.')
